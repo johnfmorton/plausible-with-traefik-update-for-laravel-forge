@@ -3,11 +3,15 @@ services:
   mail:
     image: bytemark/smtp
     restart: always
+    networks:
+      - default
 
   plausible_db:
     # supported versions are 12, 13, and 14
     image: postgres:14-alpine
     restart: always
+    networks:
+      - default
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
@@ -16,6 +20,8 @@ services:
   plausible_events_db:
     image: clickhouse/clickhouse-server:23.3.7.5-alpine
     restart: always
+    networks:
+      - default
     volumes:
       - event-data:/var/lib/clickhouse
       - ./clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
@@ -27,7 +33,13 @@ services:
 
   plausible:
     image: plausible/analytics:v2.0
+    # image: plausible/analytics:latest
+    container_name: "analytics"
     restart: always
+    # Note that this adds the "proxy" network to the container so that Traefik can route to it
+    networks:
+      - default
+      - proxy
     command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
     depends_on:
       - plausible_db
@@ -36,7 +48,7 @@ services:
     ports:
       - 8000:8000
     env_file:
-      - plausible-conf.env
+      - .env
 
 volumes:
   db-data:
@@ -45,3 +57,8 @@ volumes:
     driver: local
   geoip:
     driver: local
+
+networks:
+  default:
+  proxy:
+    external: true

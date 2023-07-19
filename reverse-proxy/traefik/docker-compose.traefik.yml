@@ -3,6 +3,9 @@ services:
   plausible:
     labels:
       traefik.enable: "true"
-      traefik.http.routers.plausible.rule: "Host(`example.com`)" # change to your domain name
+      traefik.http.routers.plausible.rule: "Host(`${URL_FOR_TRAEFIK}`)" # change to your domain name or use the .env variable as suggested here
       traefik.http.routers.plausible.entrypoints: "websecure"
-      traefik.http.services.plausible.loadbalancer.server.port: "8000"
+      # The following line is commented out because I did not want to use port 8000, the Plausible default port
+      # traefik.http.services.plausible.loadbalancer.server.port: "8000"
+      traefik.http.routers.plausible.tls.certresolver: "leresolver"
+      traefik.docker.network: "proxy"
