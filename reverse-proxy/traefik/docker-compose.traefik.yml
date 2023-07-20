@@ -1,6 +1,17 @@
 version: "3.3"
 services:
+  mail:
+    networks:
+      - default
+  plausible_events_db:
+    networks:
+      - default
   plausible:
+    container_name: "analytics"
+    # Note that this adds the "proxy" network to the container so that Traefik can route to it
+    networks:
+      - default
+      - proxy
     labels:
       traefik.enable: "true"
       traefik.http.routers.plausible.rule: "Host(`${URL_FOR_TRAEFIK}`)" # change to your domain name or use the .env variable as suggested here
@@ -9,3 +20,8 @@ services:
       # traefik.http.services.plausible.loadbalancer.server.port: "8000"
       traefik.http.routers.plausible.tls.certresolver: "leresolver"
       traefik.docker.network: "proxy"
+
+networks:
+  default:
+  proxy:
+    external: true
