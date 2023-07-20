@@ -1,19 +1,19 @@
 version: "3.3"
 services:
   mail:
-    #networks:
-    #  - default
+    networks:
+      - default
   plausible_db:
-    #networks:
-    #  - default
+    networks:
+      - default
   plausible_events_db:
-    #networks:
-    #  - default
+    networks:
+      - default
   plausible:
     container_name: "analytics"
     # Note that this adds the "proxy" network to the container so that Traefik can route to it
     networks:
-      #- default
+      - default
       - proxy
     labels:
       traefik.enable: "true"
@@ -28,6 +28,6 @@ services:
 
 # The network used for Traefik is "proxy". I've also defined a "default" network for the other Plausible services to use for internal communication.
 networks:
-  #default:
+  default:
   proxy:
     external: true
