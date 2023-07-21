@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load the environment variables
-source /path/to/.env
+source .env
 
 # docker run -u $(id -u clickhouse) --rm -it --network host -v "/var/lib/clickhouse:/var/lib/clickhouse" \
 #    -e CLICKHOUSE_PASSWORD="password" \

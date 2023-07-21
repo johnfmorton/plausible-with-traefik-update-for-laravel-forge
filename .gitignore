@@ -1,6 +1,4 @@
 /.env
 
 /backups/*
-/backups/clickhouse-data/*
-
 !.gitkeep
