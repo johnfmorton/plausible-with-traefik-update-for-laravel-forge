@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# This file is meant to be run as root or with sudo
+# It will create a backup of the clickhouse data and store it in the local backup directory
+# It will also change the ownership of the backup files to the forge user which is why it requires sudo or root privilages
+# The script is intended to be run as a cron job
+
+# The Postgres database backup directory backup script will be added in the next major update to this script
+
 # Load the environment variables
 source .env
 
@@ -13,10 +20,6 @@ source .env
 # Create the local backup directory if is does not exist
 mkdir -p ${LOCAL_BACKUP_PATH}
 
-# docker run -u $(id -u forge) --rm -it --network analytics_default -v "/home/forge/analytics/backups/clickhouse-data/:/var/lib/clickhouse/backup/" \
-# -e CLICKHOUSE_HOST="plausible_events_db" \
-#   altinity/clickhouse-backup create mybackup323pm
-
 # create a timestamp variable
 timestamp=$(date +%Y-%m-%d-%H-%M-%S)
 
@@ -27,3 +30,6 @@ docker run --rm -it --network analytics_default -v "${LOCAL_BACKUP_PATH}:/var/li
 
 # change the ownership of the created backup files to the forge user
 chown -R forge:forge /home/forge/analytics/backups/clickhouse-data
+
+# delete backups older than 30 days
+find ${LOCAL_BACKUP_PATH} -type f -mtime +30 -name '*.tar' -delete

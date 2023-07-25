@@ -12,6 +12,7 @@ services:
       - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=postgres
+      # - DATABASE_URL=postgres://postgres:postgres@plausible_db:5432/plausible_db # i.e. postgresql://postgres:{password}@{host}:{port}/{db_name}
 
   plausible_events_db:
     image: clickhouse/clickhouse-server:23.4-alpine
