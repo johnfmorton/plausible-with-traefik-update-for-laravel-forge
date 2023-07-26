@@ -6,6 +6,16 @@
 # Load the environment variables
 source .env
 
+# Look for LOCAL_CLICKHOUSE_PATH and exit if not found
+if [ -z ${LOCAL_BACKUP_PATH+x} ]; then
+    echo "LOCAL_BACKUP_PATH is unset. Please set this in your .env file."
+    exit 1
+fi
+if [ -z ${LOCAL_POSTGRES_PATH+x} ]; then
+    echo "LOCAL_POSTGRES_PATH is unset. Please set this in your .env file."
+    exit 1
+fi
+
 # Create the local backup directory if is does not exist
 mkdir -p ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
 

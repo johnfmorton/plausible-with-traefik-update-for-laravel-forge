@@ -10,6 +10,16 @@
 # Load the environment variables
 source .env
 
+# Look for LOCAL_CLICKHOUSE_PATH and exit if not found
+if [ -z ${LOCAL_BACKUP_PATH+x} ]; then
+    echo "LOCAL_BACKUP_PATH is unset. Please set this in your .env file."
+    exit 1
+fi
+if [ -z ${LOCAL_CLICKHOUSE_PATH+x} ]; then
+    echo "LOCAL_CLICKHOUSE_PATH is unset. Please set this in your .env file."
+    exit 1
+fi
+
 # Create the local backup directory if is does not exist
 mkdir -p ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}
 
@@ -38,6 +48,8 @@ docker exec -it $CONTAINER_NAME clickhouse-client --query "BACKUP DATABASE plaus
 # Copy the backup file from Docker container to the server
 echo "Copying the backup file, plausible_events_db_backup_${timestamp}.zip, from Docker container to the local backup directory."
 docker cp $CONTAINER_NAME:/backups/plausible_events_db_backup_${timestamp}.zip ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}plausible_events_db_backup_${timestamp}.zip
+
+docker cp analytics-plausible_events_db-1:/backups/test.txt /home/forge/analytics/backups/clickhouse-data/clickhouse-data/
 
 ## check for success
 if [ $? -eq 0 ]; then
