@@ -21,6 +21,7 @@ services:
       - event-data:/var/lib/clickhouse
       - ./clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
       - ./clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
+      - ./backups/clickhouse-data:/backups # see the clickhouse-config.xml file for more details on this backup directory configuration. it will be used for the backup script
     ulimits:
       nofile:
         soft: 262144

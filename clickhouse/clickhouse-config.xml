@@ -13,4 +13,20 @@
     <asynchronous_metric_log remove="remove"/>
     <session_log remove="remove"/>
     <part_log remove="remove"/>
+
+    <!-- Add storage configuration for backups -->
+    <storage_configuration>
+        <disks>
+            <backups>
+                <type>local</type>
+                <path>/backups/</path>
+            </backups>
+        </disks>
+    </storage_configuration>
+
+    <!-- Add backup configuration -->
+    <backups>
+        <allowed_disk>backups</allowed_disk>
+        <allowed_path>/backups/</allowed_path>
+    </backups>
 </clickhouse>
