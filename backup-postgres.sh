@@ -3,6 +3,12 @@
 # *This file is meant to be run as root or with sudo*
 # It will backup the Postgres database to the local server
 
+# confirm that use is root or sudo, if not exit
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root or with sudo"
+  exit
+fi
+
 # Load the environment variables
 source .env
 

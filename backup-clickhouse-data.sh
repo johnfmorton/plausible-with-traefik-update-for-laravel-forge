@@ -5,7 +5,11 @@
 # It will also change the ownership of the backup files to the forge user which is why it requires sudo or root privilages
 # The script is intended to be run as a cron job
 
-# The Postgres database backup directory backup script will be added in the next major update to this script
+# confirm that use is root or sudo, if not exit
+if [ "$EUID" -ne 0 ]
+  then echo "Please run as root or with sudo"
+  exit
+fi
 
 # Load the environment variables
 source .env
