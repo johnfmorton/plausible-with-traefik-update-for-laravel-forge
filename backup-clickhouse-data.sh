@@ -68,8 +68,9 @@ fi
 
 # Remove the backup file from inside the Docker container
 echo "Removing the backup file, plausible_events_db_backup_${timestamp}.zip, from inside the Docker container."
-#docker exec $CONTAINER_NAME /bin/bash -c "rm ./backups/plausible_events_db_backup_${timestamp}.zip"
-docker exec $CONTAINER_NAME /bin/bash -c "su - root -c 'rm ./backups/plausible_events_db_backup_${timestamp}.zip'"
+docker exec $CONTAINER_NAME /bin/bash -c "rm ./backups/plausible_events_db_backup_${timestamp}.zip"
+# I need to change the ownership of the backups directory back to root:root
+docker exec $CONTAINER_NAME /bin/bash -c "chown -R root:root /backups"
 
 
 echo 'Pruning old Plausible Event database backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'
