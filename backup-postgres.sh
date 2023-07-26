@@ -25,21 +25,24 @@ if [ -z ${LOCAL_BACKUP_RETENTION_DAYS+x} ]; then
     LOCAL_BACKUP_RETENTION_DAYS=7
 fi
 
-docker exec $CONTAINER_NAME /bin/bash -c "mkdir -p /var/lib/postgresql/backups/ && PGPASSWORD=postgres pg_dump -h localhost -p 5432 -U postgres -F t -b -v -f /var/lib/postgresql/backups/backup_${timestamp}.tar plausible_db"
+docker exec $CONTAINER_NAME /bin/bash -c "mkdir -p /var/lib/postgresql/backups/ && PGPASSWORD=postgres pg_dump -h localhost -p 5432 -U postgres -F t -b -v -f /var/lib/postgresql/backups/plausible_db_backup_${timestamp}.tar plausible_db"
 
 # Copy the backup file from Docker container to the server
-docker cp $CONTAINER_NAME:/var/lib/postgresql/backups/backup_${timestamp}.tar ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
+docker cp $CONTAINER_NAME:/var/lib/postgresql/backups/plausible_db_backup_${timestamp}.tar ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
 
 # Remove the backup file from inside the Docker container
-docker exec $CONTAINER_NAME /bin/bash -c "rm /var/lib/postgresql/backups/backup_${timestamp}.tar"
+docker exec $CONTAINER_NAME /bin/bash -c "rm /var/lib/postgresql/backups/plausible_db_backup_${timestamp}.tar"
 
-echo 'Pruning old backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'
+# change the ownership of the created backup files to the forge user
+chown -R forge:forge ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
+
+echo 'Pruning old Plausible Primary database backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'
 find ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH} -type f -mtime +${LOCAL_BACKUP_RETENTION_DAYS} -exec rm {} \;
 
 # check for success
 if [ $? -eq 0 ]; then
-    echo "Successfully backed up the database to ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}."
+    echo "Successfully backed up the Plausible Primary database to ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}."
 else
-    echo "Failed to backup the database."
+    echo "Failed to backup the Plausible Primary database."
     exit 1
 fi
