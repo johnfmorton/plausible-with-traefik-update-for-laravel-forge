@@ -24,9 +24,9 @@ mkdir -p ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
 timestamp=$(date +%Y-%m-%d-%H-%M-%S)
 
 # The command must run as root to access the internal clickhouse data backup directory
-#docker run --rm -it --network analytics_default -v "${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}:/var/lib/clickhouse/backup/" \
-#   -e CLICKHOUSE_HOST="plausible_events_db" \
-#   altinity/clickhouse-backup create clickhouse-backup-${timestamp}
+# docker run --rm -it --network analytics_default -v "${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}:/var/lib/clickhouse/backup/" \
+#    -e CLICKHOUSE_HOST="plausible_events_db" \
+#    altinity/clickhouse-backup create clickhouse-backup-${timestamp}
 
 # change the ownership of the created backup files to the forge user
 #chown -R forge:forge /home/forge/analytics/backups/clickhouse-data
@@ -41,5 +41,15 @@ timestamp=$(date +%Y-%m-%d-%H-%M-%S)
 
 
 # The command must run as root to access the internal clickhouse data backup directory
-docker run --rm -it --network analytics_default -v "${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}:/var/lib/postgresql/backups/" \
-  pg_dump -h plausible_db -p 5432 -U postgres -F t -b -v -f "/var/lib/postgresql/backups/analytics_data_file-${timestamp}.tar" plausible_db
+# docker run --rm -it --network analytics_default -v "${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}:/var/lib/postgresql/backups/" \
+#   pg_dump -h plausible_db -p 5432 -U postgres -F t -b -v -f "/var/lib/postgresql/backups/analytics_data_file-${timestamp}.tar" plausible_db
+
+# Run Docker command
+#docker run --rm -v ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}:/var/lib/postgresql/backups postgres /bin/bash -c "mkdir -p /var/lib/postgresql/backups/ && PGPASSWORD=postgres pg_dump -h plausible_db -p 5432 -U postgres -F t -b -v -f /var/lib/postgresql/backups/backup_file_2.tar plausible_db"
+
+
+docker exec analytics-plausible_db-1 /bin/bash -c "mkdir -p /var/lib/postgresql/backups/ && PGPASSWORD=postgres pg_dump -h localhost -p 5432 -U postgres -F t -b -v -f /var/lib/postgresql/backups/backup_f${timestamp}tar plausible_db"
+
+
+# Copy the backup file from Docker container to the server
+docker cp analytics-plausible_db-1:/var/lib/postgresql/backups/backup_${timestamp}.tar ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
