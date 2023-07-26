@@ -23,6 +23,8 @@ if [ -z ${CLICKHOUSE_CONTAINER_NAME+x} ]; then
     CLICKHOUSE_CONTAINER_NAME="analytics-plausible_events_db-1"
 fi
 
+CONTAINER_NAME=${CLICKHOUSE_CONTAINER_NAME}
+
 # Look for env LOCAL_BACKUP_RETENTION_DAYS and set default if not found
 if [ -z ${LOCAL_BACKUP_RETENTION_DAYS+x} ]; then
     LOCAL_BACKUP_RETENTION_DAYS=7
