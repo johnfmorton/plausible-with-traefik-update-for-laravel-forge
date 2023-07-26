@@ -37,11 +37,11 @@ docker exec -it $CONTAINER_NAME clickhouse-client --query "BACKUP DATABASE plaus
 
 # Copy the backup file from Docker container to the server
 echo "Copying the backup file, plausible_events_db_backup_${timestamp}.zip, from Docker container to the local backup directory."
-docker cp $CONTAINER_NAME:/backups/plausible_events_db_backup_${timestamp}.zip ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}
+docker cp $CONTAINER_NAME:/backups/plausible_events_db_backup_${timestamp}.zip ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}plausible_events_db_backup_${timestamp}.zip
 
 ## check for success
 if [ $? -eq 0 ]; then
-  echo "Successfully copied up the Plausible Event database to ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}."
+  echo "Successfully copied up the Plausible Event database to ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}plausible_events_db_backup_${timestamp}.zip."
 else
   echo "Failed to copy the Plausible Event database."
   exit 1
