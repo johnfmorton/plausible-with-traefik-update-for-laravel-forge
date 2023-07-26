@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# I have run into instances where clickhouse would not allow me to backup the database. Restarting the docker containers fixed this.
+# docker-compose down && docker-compose -f docker-compose.yml -f reverse-proxy/traefik/docker-compose.traefik.yml up -d --remove-orphans
+
 # *This file is meant to be run as root or with sudo*
 # It will create a backup of the clickhouse data and store it in the local backup directory
 # It will also change the ownership of the backup files to the forge user which is why it requires sudo or root privilages
@@ -49,7 +52,7 @@ fi
 docker exec -it $CONTAINER_NAME clickhouse-client --query "BACKUP DATABASE plausible_events_db TO Disk('backups', 'plausible_events_db_backup_${timestamp}.zip')"
 
 
-# Copy the backup file from Docker container to the server
+# Copy the backup filec from Docker container to the server
 echo "Copying the backup file, plausible_events_db_backup_${timestamp}.zip, from Docker container to the local backup directory."
 docker cp $CONTAINER_NAME:/backups/plausible_events_db_backup_${timestamp}.zip ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}plausible_events_db_backup_${timestamp}.zip
 
@@ -65,7 +68,9 @@ fi
 
 # Remove the backup file from inside the Docker container
 echo "Removing the backup file, plausible_events_db_backup_${timestamp}.zip, from inside the Docker container."
-docker exec $CONTAINER_NAME /bin/bash -c "rm ./backups/plausible_events_db_backup_${timestamp}.zip"
+#docker exec $CONTAINER_NAME /bin/bash -c "rm ./backups/plausible_events_db_backup_${timestamp}.zip"
+docker exec $CONTAINER_NAME /bin/bash -c "su - clickhou -c 'rm ./backups/plausible_events_db_backup_${timestamp}.zip'"
+
 
 echo 'Pruning old Plausible Event database backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'
 find ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH} -type f -mtime +${LOCAL_BACKUP_RETENTION_DAYS} -exec rm {} \;
