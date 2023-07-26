@@ -47,7 +47,7 @@ docker exec $CONTAINER_NAME /bin/bash -c "rm /var/lib/postgresql/backups/plausib
 
 # change the ownership of the created backup files to the forge user
 echo "Changing the ownership of the created backup files to the forge user."
-chown -R forge:forge ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
+chown -R forge:forge ${LOCAL_BACKUP_PATH}
 
 echo 'Pruning old Plausible Primary database backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'
 find ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH} -type f -mtime +${LOCAL_BACKUP_RETENTION_DAYS} -exec rm {} \;

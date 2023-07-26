@@ -65,7 +65,7 @@ docker exec $CONTAINER_NAME /bin/bash -c "rm ./backups/plausible_events_db_backu
 
 # change the ownership of the created backup files to the forge user
 echo "Changing the ownership of the created backup files to the forge user."
-chown -R forge:forge ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
+chown -R forge:forge ${LOCAL_BACKUP_PATH}
 
 echo 'Pruning old Plausible Event database backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'
 find ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH} -type f -mtime +${LOCAL_BACKUP_RETENTION_DAYS} -exec rm {} \;
