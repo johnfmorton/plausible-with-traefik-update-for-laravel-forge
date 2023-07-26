@@ -50,6 +50,8 @@ timestamp=$(date +%Y-%m-%d-%H-%M-%S)
 
 docker exec analytics-plausible_db-1 /bin/bash -c "mkdir -p /var/lib/postgresql/backups/ && PGPASSWORD=postgres pg_dump -h localhost -p 5432 -U postgres -F t -b -v -f /var/lib/postgresql/backups/backup_${timestamp}.tar plausible_db"
 
-
 # Copy the backup file from Docker container to the server
 docker cp analytics-plausible_db-1:/var/lib/postgresql/backups/backup_${timestamp}.tar ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
+
+# Remove the backup file from inside the Docker container
+docker exec plausible_db /bin/bash -c "rm /var/lib/postgresql/backups/backup_${timestamp}.tar"
