@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This file is meant to be run as root or with sudo
+# *This file is meant to be run as root or with sudo*
 # It will create a backup of the clickhouse data and store it in the local backup directory
 # It will also change the ownership of the backup files to the forge user which is why it requires sudo or root privilages
 # The script is intended to be run as a cron job
@@ -38,7 +38,7 @@ docker exec -it $CONTAINER_NAME clickhouse-client --query "BACKUP DATABASE plaus
 docker cp $CONTAINER_NAME:/backups/plausible_events_db_backup_${timestamp}.zip ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}
 
 # Remove the backup file from inside the Docker container
-docker exec $CONTAINER_NAME /bin/bash -c "rm /backups/plausible_events_db_backup_${timestamp}.zip"
+docker exec $CONTAINER_NAME /bin/bash -c "rm ./backups/plausible_events_db_backup_${timestamp}.zip"
 
 # change the ownership of the created backup files to the forge user
 chown -R forge:forge ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
