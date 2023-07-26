@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This file is meant to be run as root or with sudo
+# *This file is meant to be run as root or with sudo*
 # It will backup the Postgres database to the local server
 
 # Load the environment variables
