@@ -18,13 +18,13 @@ source .env
 #    altinity/clickhouse-backup --help
 
 # Create the local backup directory if is does not exist
-mkdir -p ${LOCAL_BACKUP_PATH}
+mkdir -p ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}
 
 # create a timestamp variable
 timestamp=$(date +%Y-%m-%d-%H-%M-%S)
 
 # The command must run as root to access the internal clickhouse data backup directory
-docker run --rm -it --network analytics_default -v "${LOCAL_BACKUP_PATH}:/var/lib/clickhouse/backup/" \
+docker run --rm -it --network analytics_default -v "${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}:/var/lib/clickhouse/backup/" \
    -e CLICKHOUSE_HOST="plausible_events_db" \
    altinity/clickhouse-backup create clickhouse-backup-${timestamp}
 
@@ -32,4 +32,4 @@ docker run --rm -it --network analytics_default -v "${LOCAL_BACKUP_PATH}:/var/li
 chown -R forge:forge /home/forge/analytics/backups/clickhouse-data
 
 # delete backups older than 30 days
-find ${LOCAL_BACKUP_PATH} -type f -mtime +30 -name '*.tar' -delete
+find ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH} -type f -mtime +30 -name '*.tar' -delete
