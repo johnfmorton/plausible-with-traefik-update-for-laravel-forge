@@ -28,12 +28,15 @@ fi
 docker exec $CONTAINER_NAME /bin/bash -c "mkdir -p /var/lib/postgresql/backups/ && PGPASSWORD=postgres pg_dump -h localhost -p 5432 -U postgres -F t -b -v -f /var/lib/postgresql/backups/plausible_db_backup_${timestamp}.tar plausible_db"
 
 # Copy the backup file from Docker container to the server
+echo "Copying the backup file, plausible_events_db_backup_${timestamp}.zip, from Docker container to the local backup directory."
 docker cp $CONTAINER_NAME:/var/lib/postgresql/backups/plausible_db_backup_${timestamp}.tar ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
 
 # Remove the backup file from inside the Docker container
+echo "Removing the backup file, plausible_events_db_backup_${timestamp}.zip, from inside the Docker container."
 docker exec $CONTAINER_NAME /bin/bash -c "rm /var/lib/postgresql/backups/plausible_db_backup_${timestamp}.tar"
 
 # change the ownership of the created backup files to the forge user
+echo "Changing the ownership of the created backup files to the forge user."
 chown -R forge:forge ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
 
 echo 'Pruning old Plausible Primary database backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'

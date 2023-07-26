@@ -34,13 +34,17 @@ fi
 # clickhouse-client --query "BACKUP DATABASE plausible_events_db TO Disk('backups', 'plausible_events_db_backup.zip')"
 docker exec -it $CONTAINER_NAME clickhouse-client --query "BACKUP DATABASE plausible_events_db TO Disk('backups', 'plausible_events_db_backup_${timestamp}.zip')"
 
+
 # Copy the backup file from Docker container to the server
+echo "Copying the backup file, plausible_events_db_backup_${timestamp}.zip, from Docker container to the local backup directory."
 docker cp $CONTAINER_NAME:/backups/plausible_events_db_backup_${timestamp}.zip ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}
 
 # Remove the backup file from inside the Docker container
+echo "Removing the backup file, plausible_events_db_backup_${timestamp}.zip, from inside the Docker container."
 docker exec $CONTAINER_NAME /bin/bash -c "rm ./backups/plausible_events_db_backup_${timestamp}.zip"
 
 # change the ownership of the created backup files to the forge user
+echo "Changing the ownership of the created backup files to the forge user."
 chown -R forge:forge ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}
 
 echo 'Pruning old Plausible Event database backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'
