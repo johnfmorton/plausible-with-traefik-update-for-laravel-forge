@@ -45,12 +45,12 @@ docker cp $CONTAINER_NAME:/var/lib/postgresql/backups/plausible_db_backup_${time
 echo "Removing the backup file, plausible_events_db_backup_${timestamp}.zip, from inside the Docker container."
 docker exec $CONTAINER_NAME /bin/bash -c "rm /var/lib/postgresql/backups/plausible_db_backup_${timestamp}.tar"
 
+echo 'Pruning old Plausible Primary database backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'
+find ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH} -type f -mtime +${LOCAL_BACKUP_RETENTION_DAYS} -exec rm {} \;
+
 # change the ownership of the created backup files to the forge user
 echo "Changing the ownership of the created backup files to the forge user."
 chown -R forge:forge ${LOCAL_BACKUP_PATH}
-
-echo 'Pruning old Plausible Primary database backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'
-find ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH} -type f -mtime +${LOCAL_BACKUP_RETENTION_DAYS} -exec rm {} \;
 
 # check for success
 if [ $? -eq 0 ]; then
