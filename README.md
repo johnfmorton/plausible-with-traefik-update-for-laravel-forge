@@ -74,3 +74,8 @@ At one point, I needed to stop all the containers so I could start everything ag
 ```
 docker stop $(docker ps -aq)
 ```
+
+## License
+
+The source code for the site is licensed under the MIT license, which you can find in
+the MIT-LICENSE.txt file.
