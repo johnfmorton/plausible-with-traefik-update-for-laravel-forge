@@ -3,3 +3,4 @@
 /backups/*
 !.gitkeep
 /.DS_Store
+/test.sh
