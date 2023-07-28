@@ -9,8 +9,11 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+# Get the directory of the script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 # Load the environment variables
-source .env
+source "$DIR/.env"
 
 # Look for LOCAL_CLICKHOUSE_PATH and exit if not found
 if [ -z ${LOCAL_BACKUP_PATH+x} ]; then
