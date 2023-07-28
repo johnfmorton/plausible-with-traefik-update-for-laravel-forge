@@ -20,10 +20,9 @@ services:
       # The entrypoint is the one we defined in the Traefik configuration, i.e. 'websecure'. Some configurations use 'https' instead.
       traefik.http.routers.plausible.entrypoints: "websecure"
       traefik.http.routers.plausible.tls: "true"
-      # prevent IP address access
+      # prevent IP address access - commented out because not working as expected
       # traefik.http.routers.plausible.tls.options.default.sniStrict: true
-      # The following line is commented out because I did not want to use port 8000, the Plausible default port
-      # traefik.http.services.plausible.loadbalancer.server.port: "8000"
+      traefik.http.services.plausible.loadbalancer.server.port: "8000"
       # The certificate resolver is the one we defined in the Traefik configuration, i.e. 'leresolver'
       traefik.http.routers.plausible.tls.certresolver: "leresolver"
       traefik.docker.network: "proxy"
