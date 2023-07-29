@@ -50,9 +50,6 @@ if [ -z ${LOCAL_BACKUP_RETENTION_DAYS+x} ]; then
     LOCAL_BACKUP_RETENTION_DAYS=7
 fi
 
-# I need to confirm the ownership of the backups directory back is root:root
-docker exec $CONTAINER_NAME /bin/bash -c "chown -R root:root ./backups"
-
 # clickhouse-client --query "BACKUP DATABASE plausible_events_db TO Disk('backups', 'plausible_events_db_backup.zip')"
 docker exec $CONTAINER_NAME clickhouse-client --query "BACKUP DATABASE plausible_events_db TO Disk('backups', 'plausible_events_db_backup_${timestamp}.zip')"
 
@@ -74,10 +71,6 @@ fi
 # Remove the backup file from inside the Docker container
 echo "Removing the backup file, plausible_events_db_backup_${timestamp}.zip, from inside the Docker container."
 docker exec $CONTAINER_NAME /bin/bash -c "rm ./backups/plausible_events_db_backup_${timestamp}.zip"
-
-# I need to change the ownership of the backups directory back to root:root
-docker exec $CONTAINER_NAME /bin/bash -c "chown -R root:root ./backups"
-
 
 echo 'Pruning old Plausible Event database backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'
 find ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH} -type f -mtime +${LOCAL_BACKUP_RETENTION_DAYS} -exec rm {} \;
