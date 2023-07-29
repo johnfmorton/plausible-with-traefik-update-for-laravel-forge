@@ -58,8 +58,6 @@ docker exec $CONTAINER_NAME clickhouse-client --query "BACKUP DATABASE plausible
 echo "Copying the backup file, plausible_events_db_backup_${timestamp}.zip, from Docker container to the local backup directory."
 docker cp $CONTAINER_NAME:/backups/plausible_events_db_backup_${timestamp}.zip ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}plausible_events_db_backup_${timestamp}.zip
 
-#docker cp analytics-plausible_events_db-1:/backups/test.txt /home/forge/analytics/backups/clickhouse-data/clickhouse-data/
-
 ## check for success
 if [ $? -eq 0 ]; then
   echo "Successfully copied up the Plausible Event database to ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}plausible_events_db_backup_${timestamp}.zip."
