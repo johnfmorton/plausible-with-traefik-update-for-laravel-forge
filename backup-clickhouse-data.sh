@@ -5,7 +5,8 @@
 
 # *This file is meant to be run as root or with sudo*
 # It will create a backup of the clickhouse data and store it in the local backup directory
-# It will also change the ownership of the backup files to the forge user which is why it requires sudo or root privilages
+# It will also change the ownership of the backup files to the forge user which is why it
+# requires sudo or root privilages.
 # The script is intended to be run as a cron job
 
 # confirm that use is root or sudo, if not exit
