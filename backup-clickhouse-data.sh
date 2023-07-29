@@ -54,7 +54,7 @@ fi
 docker exec $CONTAINER_NAME /bin/bash -c "chown -R root:root ./backups"
 
 # clickhouse-client --query "BACKUP DATABASE plausible_events_db TO Disk('backups', 'plausible_events_db_backup.zip')"
-docker exec -it $CONTAINER_NAME clickhouse-client --query "BACKUP DATABASE plausible_events_db TO Disk('backups', 'plausible_events_db_backup_${timestamp}.zip')"
+docker exec $CONTAINER_NAME clickhouse-client --query "BACKUP DATABASE plausible_events_db TO Disk('backups', 'plausible_events_db_backup_${timestamp}.zip')"
 
 
 # Copy the backup filec from Docker container to the server
