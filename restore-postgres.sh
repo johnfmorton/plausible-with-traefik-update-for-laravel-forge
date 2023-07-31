@@ -22,7 +22,7 @@ BACKUP_FILE_NAME_TIMESTAMPED=${timestamp}-$(basename $BACKUP_FILE_PATH)
 docker cp $BACKUP_FILE_PATH $CONTAINER_NAME:/var/lib/postgresql/backups/$BACKUP_FILE_NAME_TIMESTAMPED
 
 # Restore the database from the backup file inside the Docker container
-docker exec $CONTAINER_NAME /bin/bash -c "pg_restore -U postgres -d plausible_db -v -1 /var/lib/postgresql/backups/$BACKUP_FILE_NAME_TIMESTAMPED"
+docker exec $CONTAINER_NAME /bin/bash -c "pg_restore --clean -U postgres -d plausible_db -v -1 /var/lib/postgresql/backups/$BACKUP_FILE_NAME_TIMESTAMPED"
 
 # Remove the backup file from inside the Docker container
 docker exec $CONTAINER_NAME /bin/bash -c "rm /var/lib/postgresql/backups/$BACKUP_FILE_NAME_TIMESTAMPED"
