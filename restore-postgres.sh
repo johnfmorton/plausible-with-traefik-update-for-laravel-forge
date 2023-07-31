@@ -18,6 +18,14 @@ BACKUP_FILE_NAME=$(basename $BACKUP_FILE_PATH)
 # using a timestamp in the file name prevents overwriting other possible files in the container backup directory with the same name
 BACKUP_FILE_NAME_TIMESTAMPED=${timestamp}-$(basename $BACKUP_FILE_PATH)
 
+if [ -z ${LOCAL_BACKUP_PATH+x} ]; then
+    echo "POSTGRES_CONTAINER_NAME is unset in your .env file. Using default of analytics-plausible_db-1."
+fi
+
+CONTAINER_NAME=${POSTGRES_CONTAINER_NAME}
+
+docker exec -u root $CONTAINER_NAME /bin/bash -c "mkdir -p /var/lib/postgresql/backups/"
+
 # Copy the backup file from the host to the Docker container
 docker cp $BACKUP_FILE_PATH $CONTAINER_NAME:/var/lib/postgresql/backups/$BACKUP_FILE_NAME_TIMESTAMPED
 
