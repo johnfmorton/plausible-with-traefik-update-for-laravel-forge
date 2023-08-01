@@ -4,7 +4,9 @@
 
 This repo is a fork of Plausible's hosting repo,[https://github.com/plausible/hosting](https://github.com/plausible/hosting).
 
-It contains a modifications to the original repo to make it work with Laravel Forge and Traefik. Modifications are exclusively in the [`/reverse-proxy/traefik/docker-compose.traefik.yml`](/reverse-proxy/traefik/docker-compose.traefik.yml) file, except for a single change in the main [`docker-compose.yml`](/docker-compose.yml) file that tells Plausible to use `.env` for environmental variables. Using the `.env` file allows you to use Laravel Forge's built-in environmental variables editor.
+It contains modifications to the original repo to make it work with Laravel Forge and Traefik. Modifications are primarily in the [`/reverse-proxy/traefik/docker-compose.traefik.yml`](/reverse-proxy/traefik/docker-compose.traefik.yml) file. There are a few changes in the main [`docker-compose.yml`](/docker-compose.yml) file to use `.env` for environmental variables. Using the `.env` file allows you to use Laravel Forge's built-in environmental variables editor. I've also removed exposing ports that were not needed when using Traefik.
+
+The `clickhouse/clickhouse-config.xml` file has been modified from the original to allow the included backup scripts to work.
 
 Here is a link to the Traefik repo used in conjunction with this repo:
 
