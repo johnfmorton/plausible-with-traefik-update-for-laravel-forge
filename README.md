@@ -12,6 +12,10 @@ Here is a link to the Traefik repo used in conjunction with this repo:
 
 https://github.com/johnfmorton/traefik-for-laravel-forge
 
+## The accompanying blog post
+
+For a complete write-up on using this repo, read [*Analytics a different way. Plausible Analytics on Laravel Forge with Traefik and Docker.*](https://supergeekery.com/blog/plausible-analytics-on-laravel-forge-with-traefik-and-docker)
+
 ## Laravel Forge preparation
 
 The repo assumes you have Docker installed already. See the [johnfmorton/traefik-for-laravel-forge repo](https://github.com/johnfmorton/traefik-for-laravel-forge#laravel-forge-preparation) for more information.
