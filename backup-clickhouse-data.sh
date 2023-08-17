@@ -72,7 +72,7 @@ echo "Removing the backup file, plausible_events_db_backup_${timestamp}.zip, fro
 docker exec $CONTAINER_NAME /bin/bash -c "rm ./backups/plausible_events_db_backup_${timestamp}.zip"
 
 echo 'Pruning old Plausible Event database backups to max age of '${LOCAL_BACKUP_RETENTION_DAYS}' days.'
-find ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH} -type f -mtime +${LOCAL_BACKUP_RETENTION_DAYS} -exec rm {} \;
+find ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH} -type f -mtime +${LOCAL_BACKUP_RETENTION_DAYS} -exec rm {} \;
 
 # change the ownership of the created backup files to the forge user
 echo "Changing the ownership of the created backup files to the forge user."
@@ -80,7 +80,7 @@ chown -R forge:forge ${LOCAL_BACKUP_PATH}
 
 # check for success
 if [ $? -eq 0 ]; then
-    echo "Successfully backed up the Plausible Event database to ${LOCAL_BACKUP_PATH}${LOCAL_POSTGRES_PATH}."
+    echo "Successfully backed up the Plausible Event database to ${LOCAL_BACKUP_PATH}${LOCAL_CLICKHOUSE_PATH}."
 else
     echo "Failed to backup the Plausible Event database."
     exit 1
