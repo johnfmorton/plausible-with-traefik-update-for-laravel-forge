@@ -1,9 +1,13 @@
 cd /home/forge/analytics
 
-# We are assuming Docker has been installed, which is installed upon server creation
-# using the "Install Docker and Docker-Compose" recipe.
+# We assume Docker has already been installed using the "Install Docker and Docker-Compose" recipe.
+# The "Make .env variables available to deploy script" must be checked in Laravel Forge
 
-# the "Make .env variables available to deploy script" is check in Laravel Forge
+# Confirm Docker is installed and available
+if ! command -v docker &> /dev/null; then
+    echo "Docker is not installed. Please install Docker and try again."
+    exit 1
+fi
 
 echo "Deploying: ${APP_NAME} at ${BASE_URL}"
 echo "commit @${FORGE_DEPLOY_COMMIT} -- ${FORGE_DEPLOY_MESSAGE}"
