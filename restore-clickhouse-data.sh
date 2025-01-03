@@ -34,7 +34,7 @@ docker cp ${BACKUP_FILE_PATH} ${CONTAINER_NAME}:/backups/${BACKUP_FILE_NAME_TIME
 # restore the database from the backup file
 # working example
 # docker exec hosting-plausible_events_db-1 clickhouse-client --query "RESTORE DATABASE plausible_events_db FROM Disk('backups', 'plausible_events_db_backup.zip') SETTINGS allow_non_empty_tables=true"
-docker exec $CONTAINER_NAME clickhouse-client --query "RESTORE DATABASE plausible_events_db FROM Disk('backups', '${BACKUP_FILE_NAME_TIMESTAMPED}) SETTINGS allow_non_empty_tables=true'"
+docker exec $CONTAINER_NAME clickhouse-client --query "RESTORE DATABASE plausible_events_db FROM Disk('backups', '${BACKUP_FILE_NAME_TIMESTAMPED}') SETTINGS allow_non_empty_tables=true"
 
 # remove the backup file from the container
 docker exec $CONTAINER_NAME /bin/bash -c "rm /backups/${BACKUP_FILE_NAME_TIMESTAMPED}"
