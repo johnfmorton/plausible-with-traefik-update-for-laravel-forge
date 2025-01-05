@@ -44,6 +44,29 @@ docker-compose -f docker-compose.yml -f reverse-proxy/traefik/docker-compose.tra
 
 For a more complete version of the deployment script, see the [`forge-deployment-script.sh`](./forge-deployment-script.sh) file in this repo.
 
+## Backup and restore
+
+In January 2025, I rebuilt the backup and restore scripts entirely. The new scripts are
+
+* data-volume-backup.sh
+* data-volume-restore.sh
+
+You MUST set the following environmental variables in the `.env` file for the backup and restore scripts to work.
+
+```
+RETENTION_DAYS=7
+BACKUP_DIR="/home/forge/backups"
+EMAIL="your_email@example.com"
+```
+
+The backup script can be run from the command line, or in a cron job. The backup script will back up the Postgres and Clickhouse databases in the [`/backup`](/backup) directory.
+
+The restore script can be run from the command line. It will restore the Postgres and Clickhouse databases from the backup files in the [`/backup`](/backup) directory. The script will look for the most recent backup files in the directory. If you want to specify a different backup file, you can pass the file name as an argument to the script.
+
+```
+./data-volume-restore.sh [-d database_backup_file] [-e event_data_backup_file]
+```
+
 
 ## Reference links
 
@@ -53,6 +76,9 @@ I referenced and borrowed from all of the following links. I'm grateful the auth
 * https://putyourlightson.com/articles/replacing-google-analytics-with-self-hosted-analytics
 * https://plausible.io/docs/self-hosting
 * https://www.digitalocean.com/community/tutorials/how-to-use-traefik-as-a-reverse-proxy-for-docker-containers-on-ubuntu-20-04
+* https://macarthur.me/posts/back-up-plausible-to-bucket/
+* https://plausiblebootstrapper.com/posts/back-up-plausible
+* https://plausiblebootstrapper.com/posts/back-up-plausible-to-bucket
 
 
 ## Troubleshooting

@@ -1,4 +1,4 @@
-Copyright (c) 2023 John F Morton and others
+Copyright (c) 2025 John F Morton and others
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
