@@ -7,6 +7,14 @@
 
 # Load configuration variables
 # RETENTION_DAYS, BACKUP_DIR, EMAIL must be present
+
+# Determine the directory where the script resides
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Change to the script's directory
+cd "$SCRIPT_DIR" || { echo "Failed to change directory to $SCRIPT_DIR. Exiting." >&2; exit 1; }
+
+# Load configuration variables from .env in the script's directory
 CONFIG_FILE=".env"
 if [ -f "$CONFIG_FILE" ]; then
   source "$CONFIG_FILE"
@@ -14,6 +22,7 @@ else
   echo "Configuration file not found: $CONFIG_FILE" >&2
   exit 1
 fi
+
 
 # Confirm required variables are set
 REQUIRED_VARS=("RETENTION_DAYS" "BACKUP_DIR" "EMAIL")

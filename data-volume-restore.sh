@@ -5,6 +5,12 @@
 # https://plausiblebootstrapper.com/posts/back-up-plausible
 # https://plausiblebootstrapper.com/posts/back-up-plausible-to-bucket
 
+# Determine the directory where the script resides
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Change to the script's directory
+cd "$SCRIPT_DIR" || { echo "Failed to change directory to $SCRIPT_DIR. Exiting." >&2; exit 1; }
+
 # Load configuration variables
 # RETENTION_DAYS, BACKUP_DIR, EMAIL must be present
 CONFIG_FILE=".env"
