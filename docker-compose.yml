@@ -4,45 +4,63 @@ services:
     restart: always
 
   plausible_db:
-    # supported versions are 12, 13, and 14
-    image: postgres:14-alpine
+    image: postgres:16-alpine
     restart: always
     volumes:
       - db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=postgres
-      # - DATABASE_URL=postgres://postgres:postgres@plausible_db:5432/plausible_db # i.e. postgresql://postgres:{password}@{host}:{port}/{db_name}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      start_period: 1m
 
   plausible_events_db:
-    image: clickhouse/clickhouse-server:23.4-alpine
+    image: clickhouse/clickhouse-server:24.12-alpine
     restart: always
     volumes:
       - event-data:/var/lib/clickhouse
-      - ./clickhouse/clickhouse-config.xml:/etc/clickhouse-server/config.d/logging.xml:ro
-      - ./clickhouse/clickhouse-user-config.xml:/etc/clickhouse-server/users.d/logging.xml:ro
+      - event-logs:/var/log/clickhouse-server
+      - ./clickhouse/logs.xml:/etc/clickhouse-server/config.d/logs.xml:ro
+      - ./clickhouse/ipv4-only.xml:/etc/clickhouse-server/config.d/ipv4-only.xml:ro
+      - ./clickhouse/low-resources.xml:/etc/clickhouse-server/config.d/low-resources.xml:ro
     ulimits:
       nofile:
         soft: 262144
         hard: 262144
+    environment:
+      - CLICKHOUSE_SKIP_USER_SETUP=1
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 -O - http://127.0.0.1:8123/ping || exit 1"]
+      start_period: 1m
 
   plausible:
-    image: plausible/analytics:v2.0
+    image: ghcr.io/plausible/community-edition:v3.1.0
     restart: always
-    command: sh -c "sleep 10 && /entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
+    command: sh -c "/entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
     depends_on:
-      - plausible_db
-      - plausible_events_db
-      - mail
-    # expose ports only when testing. Traefik does not need these exposed here
-    # since it will use the internal network. See the docker-compose.traefik
-    # file where the server port is exposed to the traefik network
+      plausible_db:
+        condition: service_healthy
+      plausible_events_db:
+        condition: service_healthy
+      mail:
+        condition: service_started
+    volumes:
+      - plausible-data:/var/lib/plausible
+    # Traefik will still use the internal network from your traefik compose/override.
+    # No need to expose ports here unless you want local debugging.
     # ports:
-    #  - 8000:8000
+    #   - "8000:8000"
     env_file:
       - .env
+    environment:
+      - TMPDIR=/var/lib/plausible/tmp
 
 volumes:
   db-data:
     driver: local
   event-data:
+    driver: local
+  event-logs:
+    driver: local
+  plausible-data:
     driver: local
